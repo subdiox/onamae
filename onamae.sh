@@ -9,7 +9,11 @@ hosts=('' 'www' 'site1' 'site2')
 domain='example.com'
 
 ipAddr=`curl 'ipinfo.io/ip'`
-for host in hosts; do
+
+IFS_bak=$IFS
+IFS=','
+for host in ${hosts[@]}; do
+	echo "Updating [$host].$domain ..."
 	cat <<- EOS | openssl s_client -connect ddnsclient.onamae.com:65010 -quiet
 	LOGIN
 	USERID:$userId
@@ -24,3 +28,4 @@ for host in hosts; do
 	.
 	EOS
 done
+IFS=$IFS_bak
